@@ -1,0 +1,5 @@
+1. export
+2. python manage.py -r
+3. ./bin/zeppelin-daemon.sh start
+
+
