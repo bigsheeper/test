@@ -19,7 +19,7 @@ $ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 $ bash Miniconda3-latest-Linux-x86_64.sh
 ```
 
-你可以使用如下命令查看 Miniconda 安装是否成功：
+根据安装提示进行安装后，可使用如下命令查看 Miniconda 安装是否成功：
 
 ```bash
 $ which conda
