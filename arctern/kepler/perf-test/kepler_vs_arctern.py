@@ -123,11 +123,11 @@ def run_test(num_rows):
 
 if __name__ == "__main__":
     ## run
-    # delete_file()
-    # for i in range(28, 29):
-    #     run_test(i * 1000000)
+    delete_file()
+    for i in range(1, 29):
+        run_test(i * 1000000)
 
     # plot
-    log_file = '/tmp/vs_result.txt'
-    arr_kepler,arr_arctern = get_perf_data(log_file)
-    plot_line_chart(list(map(float,arr_kepler)),list(map(float,arr_arctern)))
+    # log_file = '/tmp/vs_result.txt'
+    # arr_kepler,arr_arctern = get_perf_data(log_file)
+    # plot_line_chart(list(map(float,arr_kepler)),list(map(float,arr_arctern)))
