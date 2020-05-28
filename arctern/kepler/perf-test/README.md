@@ -12,10 +12,11 @@
 |**arctern CPU**	|0.05|1.45|2.98|4.32|5.81|7.02|8.31|10.36|11.71|12.72|13.65|14.67|16.17|
 |**arctern GPU**	|0.05|0.81|1.71|2.45|3.24|4.08|4.94|6.00|6.69|7.77|8.59|9.37|10.24|
 
-arctern CPU 平均比 kepler 快 5.72 倍;
-arctern GPU 平均比 kepler 快 9.84 倍。
+- arctern CPU 平均比 kepler 快 5.72 倍;
 
-- 测试结果绘制折线图如下：
+- arctern GPU 平均比 kepler 快 9.84 倍。
+
+测试结果绘制折线图如下：
 
 ![perf_result.png](perf_result.png)
 
