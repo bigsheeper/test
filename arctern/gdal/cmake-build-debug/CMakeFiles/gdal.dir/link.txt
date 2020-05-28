@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/gdal.dir/main.cpp.o  -o gdal   -L/home/sheep/miniconda3/envs/arctern/lib 

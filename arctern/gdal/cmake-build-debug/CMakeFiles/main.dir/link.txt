@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/main.dir/main.cpp.o  -o main   -L/home/sheep/miniconda3/envs/arctern/lib  -Wl,-rpath,/home/sheep/miniconda3/envs/arctern/lib -lgdal 
