@@ -51,10 +51,23 @@ def print_form(arr_kepler,arr_arctern_cpu,arr_arctern_gpu):
         print("{:.2f}".format(i), end ="|")
     print('\n==================================================')
 
+def calculate_mean(arr_kepler,arr_arctern_cpu,arr_arctern_gpu):
+    acc_cpu = []
+    acc_gpu = []
+    for i in range(1, 11):
+        print(i)
+        acc_cpu.append((arr_kepler[i]) / arr_arctern_cpu[i])
+        acc_gpu.append((arr_kepler[i]) / arr_arctern_gpu[i])
+    print(acc_cpu)
+    print(acc_gpu)
+    print("cpu accelerate: %f", sum(acc_cpu) / len(acc_cpu))
+    print("gpu accelerate: %f", sum(acc_gpu) / len(acc_gpu))
+
 log_file = 'results.txt'
 plot_dir = '/tmp/'
 # main invocation
 if __name__ == "__main__":
      arr_kepler,arr_arctern_cpu,arr_arctern_gpu = get_perf_data(log_file)
-     print_form(list(map(float,arr_kepler)),list(map(float,arr_arctern_cpu)),list(map(float,arr_arctern_gpu)))
+     calculate_mean(list(map(float,arr_kepler)),list(map(float,arr_arctern_cpu)),list(map(float,arr_arctern_gpu)))
+     # print_form(list(map(float,arr_kepler)),list(map(float,arr_arctern_cpu)),list(map(float,arr_arctern_gpu)))
      # plot_line_chart2(list(map(float,arr_kepler)),list(map(float,arr_arctern_cpu)),list(map(float,arr_arctern_gpu)))
