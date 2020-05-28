@@ -123,8 +123,8 @@ def run_test(num_rows):
 
 if __name__ == "__main__":
     ## run
-    delete_file()
-    for i in range(1, 29):
+    # delete_file()
+    for i in range(21, 29):
         run_test(i * 1000000)
 
     # plot
