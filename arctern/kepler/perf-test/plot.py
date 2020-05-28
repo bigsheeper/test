@@ -20,11 +20,11 @@ def get_perf_data(log):
 def plot_line_chart2(arr_kepler,arr_arctern_cpu,arr_arctern_gpu):
     perf_picture = plot_dir +'perf.png'
     perf_fig_title = ' Performance Fig (arctern vs kepler)'
-    index1 = list(range(1, len(arr_kepler) - 2))
-    index2 = list(range(1, len(arr_arctern_cpu) - 2))
-    plt.plot(index1, arr_kepler[1:11], label="$kepler$", color="blue", linewidth=1)
-    plt.plot(index2, arr_arctern_cpu[1:11], label="$arctern  CPU$", color="red", linestyle='--', linewidth=1)
-    plt.plot(index2, arr_arctern_gpu[1:11], label="$arctern  GPU$", color="green", linestyle='-.', linewidth=1)
+    index1 = list(range(0, len(arr_kepler) - 2))
+    index2 = list(range(0, len(arr_arctern_cpu) - 2))
+    plt.plot(index1, arr_kepler[0:11], label="$kepler$", color="blue", linewidth=1)
+    plt.plot(index2, arr_arctern_cpu[0:11], label="$arctern  CPU$", color="red", linestyle='--', linewidth=1)
+    plt.plot(index2, arr_arctern_gpu[0:11], label="$arctern  GPU$", color="green", linestyle='-.', linewidth=1)
     plt.xlabel("data amount (million)")  # X label
     plt.ylabel("time (second)")  # Y label
     plt.title(perf_fig_title)
