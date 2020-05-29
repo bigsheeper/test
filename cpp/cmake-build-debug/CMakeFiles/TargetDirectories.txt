@@ -1,3 +1,0 @@
-/home/sheep/workspace/arctern/sheep/test/arctern/cpp/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/sheep/workspace/arctern/sheep/test/arctern/cpp/cmake-build-debug/CMakeFiles/rvo.dir
-/home/sheep/workspace/arctern/sheep/test/arctern/cpp/cmake-build-debug/CMakeFiles/edit_cache.dir
