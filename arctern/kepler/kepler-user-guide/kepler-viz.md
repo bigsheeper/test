@@ -34,7 +34,7 @@ map_1 = KeplerGl()
 map_1
 ```
 
-加载一个空的地图。使用 KeplerGl() 接口创建一个地图对象 map_1，调用 map_1 将会在当前的 Jupyter 段落下方加载 Keplergl 的地图可视化部件。
+加载一个空的地图。使用 KeplerGl() 接口创建一个地图对象 map_1，调用 map_1 将会在当前的 Jupyter 段落下方加载 Keplergl 的地图可视化部件：
 
 ![load_map](load_map.png)
 
