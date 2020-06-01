@@ -39,12 +39,23 @@ struct E {
 } e;
 
 int main() {
-//  std::cout << sizeof(structa_t) << std::endl;
-//  std::cout << sizeof(structb_t) << std::endl;
+  std::cout << sizeof(structa_t) << std::endl;
+  std::cout << sizeof(structb_t) << std::endl;
   std::cout << sizeof(structc_t) << std::endl;
-//  std::cout << sizeof(structd_t) << std::endl;
+  std::cout << sizeof(structd_t) << std::endl;
 //  std::cout << sizeof(e) << std::endl;
 
   return 0;
 }
 
+// 4
+// 8
+// 24
+// 16
+
+// https://www.geeksforgeeks.org/structure-member-alignment-padding-and-data-packing/
+
+// why size of structc_t is 24?
+// Because Every structure will also have alignment requirements.
+// 假设 struct c1 占用 20 （1 + 7 + 8 + 4） 个字节，那么对于 struct c2，double 成员的起始位置就是 20 + 1 + 7 = 28，
+// 不是 8 的整数倍，所以 double 应该进行偏移至 32，导致 size of structc_t 也对应进行偏移，为 24 而不是 20。
