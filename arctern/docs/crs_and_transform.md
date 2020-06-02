@@ -1,6 +1,6 @@
 # Arctern 坐标系统
 
-本文档介绍 CRS（Coordinate Reference System，坐标参考系统）并引导你使用 Arctern 进行坐标系统转换。
+本文档介绍 CRS（Coordinate Reference System，坐标参考系统）和如何使用 Arctern 进行坐标系统转换。
 
 ## 坐标参考系统
 
@@ -12,11 +12,9 @@
 
 ## 坐标系统转换
 
-使用 Arctern 可以将每个几何体对象转换为不同的坐标参考系统。在转换之前必须先设置当前的坐标参考系统，最后返回坐标系统转换之后的几何体对象。
+使用 Arctern 可以将几何体对象在不同的坐标参考系统之间进行转换。在转换之前必须先设置当前几何体对象的坐标参考系统，最后返回坐标转换之后的几何体对象。
 
-## 坐标系统转换示例
-
-以下示例展示使用 Arctern 将纽约市出租车数据由经纬度坐标系统转换到墨卡托投影坐标系统。
+以下展示使用 Arctern 将纽约市出租车的上车点数据由经纬度坐标系统转换到墨卡托投影坐标系统。
 
 ### 1. 下载数据
 
@@ -79,11 +77,13 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nyta
 199997    POINT (-74.003543 40.723708)
 199998      POINT (-74.01205 40.70913)
 Length: 199999, dtype: GeoDtype
+>>> points_series.crs
+'EPSG:4326'
 ```
 
 ### 4. 坐标转换
 
-使用 arctern.GeoSeries 的 to_crs 接口将 points_series 由原先的经纬度坐标系统转换为墨卡托投影坐标系统（即 "EPSG:3857"）。
+使用 arctern.GeoSeries 的 to_crs 接口将 points_series 的经纬度坐标系统转换为墨卡托投影坐标系统（即 "EPSG:3857"）。
 
 ```python
 >>> points_series = points_series.to_crs(crs="EPSG:3857")
