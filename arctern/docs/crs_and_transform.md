@@ -35,7 +35,7 @@ dtype: GeoDtype
 
 ### 2. 设置坐标系统
 
-使用 arctern.GeoSeries 的 set_crs 接口，设置 geos 当前所属的坐标参考系统。
+使用 arctern.GeoSeries 的 [set_crs](/path/to/set_crs) 接口，设置 geos 当前所属的坐标参考系统。
 
 ```python
 >>> geos.set_crs("EPSG:4326")
@@ -45,7 +45,7 @@ dtype: GeoDtype
 
 ### 3. 坐标转换
 
-使用 arctern.GeoSeries 的 to_crs 接口，将 geos 的经纬度坐标系统转换为墨卡托投影坐标系统（即 "EPSG:3857"）。
+使用 arctern.GeoSeries 的 [to_crs](/path/to/to_crs) 接口，将 geos 的经纬度坐标系统转换为墨卡托投影坐标系统（即 "EPSG:3857"）。
 
 ```python
 >>> geos = geos.to_crs(crs="EPSG:3857")
