@@ -23,5 +23,9 @@ int main() {
 
   auto res = geo->Equals(geo2);
 
+  auto ring = geo->toPolygon()->getExteriorRing();
+  auto line = ring->toLineString();
+  auto line_size = line->WkbSize();
+
   return 0;
 }
