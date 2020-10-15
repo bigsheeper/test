@@ -105,10 +105,15 @@ func (t *Tester) GenerateLog(length int) {
 
 	t.InsertLogs = append(t.InsertLogs, insertLog)
 	t.msgCounter.InsertTime = timeNow
+	fmt.Println(insertLog)
 }
 
 func (t *Tester) WriteLog() {
 	fileName := t.testConfig.LogWritePath
+	fileName += "throughput_test_result_"
+	fileName += strconv.FormatInt(int64(t.testConfig.TotalDataSizeInGB), 10)
+	fileName += "_" + strconv.FormatInt(int64(t.testConfig.ProducerNum), 10)
+	fileName += ".txt"
 
 	f, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
@@ -201,8 +206,8 @@ func main() {
 	conf := TestConfig{
 		PulsarUrl:         "pulsar://localhost:6650",
 		PulsarTopic:       "my-test",
-		LogWritePath:      "/tmp/throughput_test_result.txt",
-		ProducerNum:       512,
+		LogWritePath:      "/tmp/",
+		ProducerNum:       1024,
 		VectorDims:        vectorDims,
 		TotalDataSizeInGB: 8,
 	}
