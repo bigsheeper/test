@@ -1,0 +1,4 @@
+/usr/local/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/sheep/workspace/arctern/sheep/test/arctern/untitled
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/sheep/workspace/arctern/sheep/test/arctern/untitled/cmake-build-debug
