@@ -1,7 +1,0 @@
-{"TopicNum":4,"ProducerNum":128,"VectorDim":512,"MsgLength":262144,"DurationInMilliseconds":5310,"SpeedInCounter":49366.49660394071,"SpeedInBytes":101102585.04487057}
-{"TopicNum":4,"ProducerNum":256,"VectorDim":512,"MsgLength":262144,"DurationInMilliseconds":3772,"SpeedInCounter":69487.75255790053,"SpeedInBytes":142310917.2385803}
-{"TopicNum":4,"ProducerNum":512,"VectorDim":512,"MsgLength":262144,"DurationInMilliseconds":3633,"SpeedInCounter":72140.36662962566,"SpeedInBytes":147743470.85747334}
-{"TopicNum":4,"ProducerNum":1024,"VectorDim":512,"MsgLength":262144,"DurationInMilliseconds":4969,"SpeedInCounter":52747.90209442463,"SpeedInBytes":108027703.48938164}
-{"TopicNum":4,"ProducerNum":2048,"VectorDim":512,"MsgLength":262144,"DurationInMilliseconds":7467,"SpeedInCounter":35105.940376256425,"SpeedInBytes":71896965.89057316}
-{"TopicNum":4,"ProducerNum":4096,"VectorDim":512,"MsgLength":262144,"DurationInMilliseconds":7814,"SpeedInCounter":33546.617211928526,"SpeedInBytes":68703472.05002962}
-{"TopicNum":4,"ProducerNum":8192,"VectorDim":512,"MsgLength":262144,"DurationInMilliseconds":6500,"SpeedInCounter":40323.6892165907,"SpeedInBytes":82582915.51557775}

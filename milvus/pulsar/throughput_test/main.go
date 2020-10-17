@@ -271,7 +271,7 @@ func TestDims() {
 }
 
 func main() {
-	//TestTopicsNum()
-	//TestProducersNum()
+	TestTopicsNum()
+	TestProducersNum()
 	TestDims()
 }
