@@ -200,16 +200,16 @@ func main() {
 		int(math.Pow(2, 15)),
 		int(math.Pow(2, 17)),
 		int(math.Pow(2, 19)),
-		int(math.Pow(2, 21)),
+		//int(math.Pow(2, 21)),
 	}
 
 	conf := TestConfig{
-		PulsarUrl:         "pulsar://localhost:6650",
+		PulsarUrl:         "pulsar://192.168.2.26:6650",
 		PulsarTopic:       "my-test",
 		LogWritePath:      "/tmp/",
 		ProducerNum:       1024,
 		VectorDims:        vectorDims,
-		TotalDataSizeInGB: 8,
+		TotalDataSizeInGB: 1,
 	}
 
 	tester := Tester{
