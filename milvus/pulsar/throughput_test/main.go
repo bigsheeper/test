@@ -69,9 +69,9 @@ func (t *Tester) InitClient() {
 func (t *Tester) InitProducer() {
 	topicsPerProducer := t.testConfig.ProducerNum / t.testConfig.TopicNum
 	for i := 0; i < t.testConfig.TopicNum; i++ {
-		for j := i * topicsPerProducer; j < (i+1)*topicsPerProducer; j++ {
+		for j := 0; j < topicsPerProducer; j++ {
 			producer, err := (*t.client).CreateProducer(pulsar.ProducerOptions{
-				Topic: t.testConfig.PulsarTopic + strconv.FormatInt(int64(j), 10),
+				Topic: t.testConfig.PulsarTopic + strconv.FormatInt(int64(i), 10),
 			})
 			if err != nil {
 				log.Fatalf("Could not instantiate Pulsar client: %v", err)
