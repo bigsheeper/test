@@ -15,8 +15,7 @@ import (
 	"time"
 )
 
-const TotalDataSizeInGB = 0.5
-const Loop = 10
+const TotalDataSizeInGB = 2
 const URL = "pulsar://localhost:6650"
 
 type Tester struct {
@@ -224,8 +223,8 @@ func TestTopicsNum() {
 		testConfig: conf,
 	}
 
-	for i := 0; i < Loop; i++{
-		tester.RunTest(int(math.Pow(2, float64(i))), 1024, 512)
+	for i := 0; i < 10; i++{
+		tester.RunTest(int(math.Pow(2, float64(i))), 512, 512)
 	}
 
 	tester.WriteLog()
@@ -235,7 +234,7 @@ func TestProducersNum() {
 	conf := TestConfig{
 		PulsarUrl:    URL,
 		PulsarTopic:  "my-test",
-		LogWritePath: "/tmp/throughput_topic_test.txt",
+		LogWritePath: "/tmp/throughput_producer_test.txt",
 
 		TotalDataSizeInGB: TotalDataSizeInGB,
 	}
@@ -244,16 +243,18 @@ func TestProducersNum() {
 		testConfig: conf,
 	}
 
-	for i := 0; i < Loop; i++{
-		tester.RunTest(1, int(math.Pow(2, float64(i))), 512)
+	for i := 7; i < 14; i++{
+		tester.RunTest(4, int(math.Pow(2, float64(i))), 512)
 	}
+
+	tester.WriteLog()
 }
 
 func TestDims() {
 	conf := TestConfig{
 		PulsarUrl:    URL,
 		PulsarTopic:  "my-test",
-		LogWritePath: "/tmp/throughput_topic_test.txt",
+		LogWritePath: "/tmp/throughput_dim_test.txt",
 
 		TotalDataSizeInGB: TotalDataSizeInGB,
 	}
@@ -262,11 +263,15 @@ func TestDims() {
 		testConfig: conf,
 	}
 
-	for i := 0; i < Loop; i++{
-		tester.RunTest(1024, 1024, int(math.Pow(2, float64(i))))
+	for i := 5; i < 19; i++{
+		tester.RunTest(4, 512, int(math.Pow(2, float64(i))))
 	}
+
+	tester.WriteLog()
 }
 
 func main() {
-	TestTopicsNum()
+	//TestTopicsNum()
+	//TestProducersNum()
+	TestDims()
 }
