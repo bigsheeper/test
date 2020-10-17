@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-const TotalDataSizeInGB = 1
+const TotalDataSizeInGB = 0.5
 const Loop = 10
 const URL = "pulsar://localhost:6650"
 
