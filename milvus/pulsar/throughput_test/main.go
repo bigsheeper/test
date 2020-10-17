@@ -166,7 +166,9 @@ func (t *Tester) Close() {
 	for i := 0; i < t.testConfig.ProducerNum; i++ {
 		t.producers[i].Close()
 	}
+	t.producers = make([]pulsar.Producer, 0)
 	(*t.client).Close()
+	t.client = nil
 }
 
 func (t *Tester) Run() {
