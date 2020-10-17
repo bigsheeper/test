@@ -15,12 +15,13 @@ import (
 	"time"
 )
 
+const TotalDataSizeInGB = 1
+const Loop = 10
+
 type Tester struct {
 	testConfig TestConfig
 	client     *pulsar.Client
 	producers  []pulsar.Producer
-
-	CurrentDim int
 
 	message    []byte
 	msgCounter MsgCounter
@@ -33,7 +34,8 @@ type TestConfig struct {
 	LogWritePath string
 
 	ProducerNum       int
-	VectorDims        []int
+	TopicNum          int
+	Dim               int
 	TotalDataSizeInGB float32
 }
 
@@ -43,6 +45,8 @@ type MsgCounter struct {
 }
 
 type InsertLog struct {
+	TopicNum               int
+	ProducerNum            int
 	VectorDim              int
 	MsgLength              int
 	DurationInMilliseconds int64
@@ -52,7 +56,7 @@ type InsertLog struct {
 
 func (t *Tester) InitClient() {
 	client, err := pulsar.NewClient(pulsar.ClientOptions{
-		URL: "pulsar://localhost:6650",
+		URL: t.testConfig.PulsarUrl,
 	})
 	if err != nil {
 		log.Fatalf("Could not instantiate Pulsar client: %v", err)
@@ -62,14 +66,17 @@ func (t *Tester) InitClient() {
 }
 
 func (t *Tester) InitProducer() {
-	for i := 0; i < t.testConfig.ProducerNum; i++ {
-		producer, err := (*t.client).CreateProducer(pulsar.ProducerOptions{
-			Topic: t.testConfig.PulsarTopic + strconv.FormatInt(int64(i), 10),
-		})
-		if err != nil {
-			log.Fatalf("Could not instantiate Pulsar client: %v", err)
+	topicsPerProducer := t.testConfig.ProducerNum / t.testConfig.TopicNum
+	for i := 0; i < t.testConfig.TopicNum; i++ {
+		for j := i * topicsPerProducer; j < (i+1)*topicsPerProducer; j++ {
+			producer, err := (*t.client).CreateProducer(pulsar.ProducerOptions{
+				Topic: t.testConfig.PulsarTopic + strconv.FormatInt(int64(j), 10),
+			})
+			if err != nil {
+				log.Fatalf("Could not instantiate Pulsar client: %v", err)
+			}
+			t.producers = append(t.producers, producer)
 		}
-		t.producers = append(t.producers, producer)
 	}
 }
 
@@ -77,7 +84,7 @@ func (t *Tester) GenerateMessage() {
 	vec := make([]float32, 0)
 	t.message = make([]byte, 0)
 
-	for i := 0; i < t.CurrentDim; i++ {
+	for i := 0; i < t.testConfig.Dim; i++ {
 		vec = append(vec, rand.Float32())
 	}
 
@@ -93,10 +100,12 @@ func (t *Tester) GenerateLog(length int) {
 	timeNow := time.Now()
 	duration := timeNow.Sub(t.msgCounter.InsertTime)
 	speedInCounter := float64(length) / duration.Seconds()
-	speedInBytes := float64(length*t.CurrentDim*4) / duration.Seconds()
+	speedInBytes := float64(length*t.testConfig.Dim*4) / duration.Seconds()
 
 	insertLog := InsertLog{
-		VectorDim:              t.CurrentDim,
+		TopicNum:               t.testConfig.TopicNum,
+		ProducerNum:            t.testConfig.ProducerNum,
+		VectorDim:              t.testConfig.Dim,
 		MsgLength:              length,
 		DurationInMilliseconds: duration.Milliseconds(),
 		SpeedInCounter:         speedInCounter,
@@ -110,10 +119,6 @@ func (t *Tester) GenerateLog(length int) {
 
 func (t *Tester) WriteLog() {
 	fileName := t.testConfig.LogWritePath
-	fileName += "throughput_test_result_"
-	fileName += strconv.FormatInt(int64(t.testConfig.TotalDataSizeInGB), 10)
-	fileName += "_" + strconv.FormatInt(int64(t.testConfig.ProducerNum), 10)
-	fileName += ".txt"
 
 	f, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
@@ -163,12 +168,11 @@ func (t *Tester) Close() {
 	(*t.client).Close()
 }
 
-func (t *Tester) Run(dim int) {
-	t.CurrentDim = dim
+func (t *Tester) Run() {
 	t.GenerateMessage()
 
 	totalDataSize := int(t.testConfig.TotalDataSizeInGB * 1024 * 1024 * 1024)
-	dataSizePerMsg := dim * 4
+	dataSizePerMsg := t.testConfig.Dim * 4
 	sendTimes := totalDataSize / (dataSizePerMsg)
 
 	t.msgCounter.InsertTime = time.Now()
@@ -190,40 +194,76 @@ func (t *Tester) Run(dim int) {
 	t.GenerateLog(count)
 }
 
-func main() {
-	vectorDims := []int{
-		int(math.Pow(2, 5)),
-		int(math.Pow(2, 7)),
-		int(math.Pow(2, 9)),
-		int(math.Pow(2, 11)),
-		int(math.Pow(2, 13)),
-		int(math.Pow(2, 15)),
-		int(math.Pow(2, 17)),
-		int(math.Pow(2, 19)),
-		//int(math.Pow(2, 21)),
-	}
+func (t *Tester) RunTest(topicNum int, producerNum int, dim int) {
+	t.testConfig.TopicNum = topicNum
+	t.testConfig.ProducerNum = producerNum
+	t.testConfig.Dim = dim
 
+	t.InitClient()
+	t.InitProducer()
+
+	fmt.Println("test topicNum:", topicNum, "producerNum:", producerNum, "dim:", dim)
+	t.Run()
+
+	t.Close()
+}
+
+func TestTopicsNum() {
 	conf := TestConfig{
 		PulsarUrl:         "pulsar://192.168.2.26:6650",
 		PulsarTopic:       "my-test",
-		LogWritePath:      "/tmp/",
-		ProducerNum:       1024,
-		VectorDims:        vectorDims,
-		TotalDataSizeInGB: 1,
+		LogWritePath:      "/tmp/throughput_topic_test.txt",
+
+		TotalDataSizeInGB: TotalDataSizeInGB,
 	}
 
 	tester := Tester{
 		testConfig: conf,
 	}
 
-	tester.InitClient()
-	tester.InitProducer()
-
-	for _, dim := range tester.testConfig.VectorDims {
-		fmt.Println("test dim", dim)
-		tester.Run(dim)
+	for i := 0; i < Loop; i++{
+		tester.RunTest(int(math.Pow(2, float64(i))), 1024, 512)
 	}
 
 	tester.WriteLog()
-	tester.Close()
+}
+
+func TestProducersNum() {
+	conf := TestConfig{
+		PulsarUrl:         "pulsar://192.168.2.26:6650",
+		PulsarTopic:       "my-test",
+		LogWritePath:      "/tmp/throughput_topic_test.txt",
+
+		TotalDataSizeInGB: TotalDataSizeInGB,
+	}
+
+	tester := Tester{
+		testConfig: conf,
+	}
+
+	for i := 0; i < Loop; i++{
+		tester.RunTest(1, int(math.Pow(2, float64(i))), 512)
+	}
+}
+
+func TestDims() {
+	conf := TestConfig{
+		PulsarUrl:         "pulsar://192.168.2.26:6650",
+		PulsarTopic:       "my-test",
+		LogWritePath:      "/tmp/throughput_topic_test.txt",
+
+		TotalDataSizeInGB: TotalDataSizeInGB,
+	}
+
+	tester := Tester{
+		testConfig: conf,
+	}
+
+	for i := 0; i < Loop; i++{
+		tester.RunTest(1024, 1024, int(math.Pow(2, float64(i))))
+	}
+}
+
+func main() {
+	TestTopicsNum()
 }
