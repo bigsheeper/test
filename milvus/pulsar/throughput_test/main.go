@@ -17,6 +17,7 @@ import (
 
 const TotalDataSizeInGB = 1
 const Loop = 10
+const URL = "pulsar://localhost:6650"
 
 type Tester struct {
 	testConfig TestConfig
@@ -210,9 +211,9 @@ func (t *Tester) RunTest(topicNum int, producerNum int, dim int) {
 
 func TestTopicsNum() {
 	conf := TestConfig{
-		PulsarUrl:         "pulsar://192.168.2.26:6650",
-		PulsarTopic:       "my-test",
-		LogWritePath:      "/tmp/throughput_topic_test.txt",
+		PulsarUrl:    URL,
+		PulsarTopic:  "my-test",
+		LogWritePath: "/tmp/throughput_topic_test.txt",
 
 		TotalDataSizeInGB: TotalDataSizeInGB,
 	}
@@ -230,9 +231,9 @@ func TestTopicsNum() {
 
 func TestProducersNum() {
 	conf := TestConfig{
-		PulsarUrl:         "pulsar://192.168.2.26:6650",
-		PulsarTopic:       "my-test",
-		LogWritePath:      "/tmp/throughput_topic_test.txt",
+		PulsarUrl:    URL,
+		PulsarTopic:  "my-test",
+		LogWritePath: "/tmp/throughput_topic_test.txt",
 
 		TotalDataSizeInGB: TotalDataSizeInGB,
 	}
@@ -248,9 +249,9 @@ func TestProducersNum() {
 
 func TestDims() {
 	conf := TestConfig{
-		PulsarUrl:         "pulsar://192.168.2.26:6650",
-		PulsarTopic:       "my-test",
-		LogWritePath:      "/tmp/throughput_topic_test.txt",
+		PulsarUrl:    URL,
+		PulsarTopic:  "my-test",
+		LogWritePath: "/tmp/throughput_topic_test.txt",
 
 		TotalDataSizeInGB: TotalDataSizeInGB,
 	}
