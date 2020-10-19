@@ -15,7 +15,8 @@ import (
 	"time"
 )
 
-const TotalDataSizeInGB = 2
+const TestTimes = 10
+const TotalDataSizeInGB = 0.5
 const URL = "pulsar://localhost:6650"
 
 type Tester struct {
@@ -117,7 +118,7 @@ func (t *Tester) GenerateLog(length int) {
 	fmt.Println(insertLog)
 }
 
-func (t *Tester) WriteLog() {
+func (t *Tester) WriteLog(insertLogs []InsertLog) {
 	fileName := t.testConfig.LogWritePath
 
 	f, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
@@ -126,7 +127,7 @@ func (t *Tester) WriteLog() {
 	}
 
 	// write logs
-	for _, insertLog := range t.InsertLogs {
+	for _, insertLog := range insertLogs {
 		insertLogJson, err := json.Marshal(&insertLog)
 		if err != nil {
 			log.Fatal(err)
@@ -210,6 +211,28 @@ func (t *Tester) RunTest(topicNum int, producerNum int, dim int) {
 	t.Close()
 }
 
+func GetAverageTestResult(insertLogs []InsertLog) InsertLog {
+	var totalDuration int64 = 0
+	var totalSpeedInCounter float64 = 0
+	var totalSpeedInBytes float64 = 0
+
+	for _, insertLog := range insertLogs {
+		totalDuration += insertLog.DurationInMilliseconds
+		totalSpeedInCounter += insertLog.SpeedInCounter
+		totalSpeedInBytes += insertLog.SpeedInBytes
+	}
+
+	return InsertLog{
+		TopicNum: insertLogs[0].TopicNum,
+		ProducerNum: insertLogs[0].ProducerNum,
+		VectorDim: insertLogs[0].VectorDim,
+		MsgLength: insertLogs[0].MsgLength,
+		DurationInMilliseconds: totalDuration / int64(len(insertLogs)),
+		SpeedInCounter: totalSpeedInCounter / float64(len(insertLogs)),
+		SpeedInBytes: totalSpeedInBytes / float64(len(insertLogs)),
+	}
+}
+
 func TestTopicsNum() {
 	conf := TestConfig{
 		PulsarUrl:    URL,
@@ -227,7 +250,7 @@ func TestTopicsNum() {
 		tester.RunTest(int(math.Pow(2, float64(i))), 512, 512)
 	}
 
-	tester.WriteLog()
+	tester.WriteLog(tester.InsertLogs)
 }
 
 func TestProducersNum() {
@@ -247,14 +270,14 @@ func TestProducersNum() {
 		tester.RunTest(4, int(math.Pow(2, float64(i))), 512)
 	}
 
-	tester.WriteLog()
+	tester.WriteLog(tester.InsertLogs)
 }
 
 func TestDims() {
 	conf := TestConfig{
 		PulsarUrl:    URL,
 		PulsarTopic:  "my-test",
-		LogWritePath: "/tmp/throughput_dim_test.txt",
+		LogWritePath: "/tmp/throughput_dim_benchmark.txt",
 
 		TotalDataSizeInGB: TotalDataSizeInGB,
 	}
@@ -263,15 +286,20 @@ func TestDims() {
 		testConfig: conf,
 	}
 
+	insertLogs := make([]InsertLog, 0)
 	for i := 5; i < 19; i++{
-		tester.RunTest(4, 512, int(math.Pow(2, float64(i))))
+		tester.InsertLogs = make([]InsertLog, 0)
+		for j := 0; j < TestTimes; j++ {
+			tester.RunTest(4, 512, int(math.Pow(2, float64(i))))
+		}
+		insertLogs = append(insertLogs, GetAverageTestResult(tester.InsertLogs))
 	}
 
-	tester.WriteLog()
+	tester.WriteLog(insertLogs)
 }
 
 func main() {
-	TestTopicsNum()
-	TestProducersNum()
+	//TestTopicsNum()
+	//TestProducersNum()
 	TestDims()
 }
