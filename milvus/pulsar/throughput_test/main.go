@@ -153,6 +153,27 @@ func (t *Tester) WriteLog(insertLogs []InsertLog) {
 	fmt.Println("write log done")
 }
 
+func (t *Tester) WriteSymbol(s string) {
+	fileName := t.testConfig.LogWritePath
+
+	f, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err2 := f.WriteString(s + "\n")
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+
+	err = f.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("write symbol done")
+}
+
 func (t *Tester) sendMsg(wg *sync.WaitGroup, index int) {
 	if _, err := t.producers[index].Send(context.Background(), &pulsar.ProducerMessage{
 		Payload: t.message,
@@ -303,9 +324,12 @@ func TestDims() {
 		for j := 0; j < TestTimes; j++ {
 			tester.RunTest(4, 512, int(math.Pow(2, float64(i))))
 		}
+		tester.WriteSymbol("-------------- dim " + strconv.FormatInt(int64(math.Pow(2, float64(i))), 10) + " --------------")
+		tester.WriteLog(tester.InsertLogs)
 		insertLogs = append(insertLogs, GetAverageTestResult(tester.InsertLogs))
 	}
 
+	tester.WriteSymbol("*************** total result ***************")
 	tester.WriteLog(insertLogs)
 }
 
