@@ -322,7 +322,7 @@ func TestDims() {
 	for i := 5; i < 19; i++{
 		tester.InsertLogs = make([]InsertLog, 0)
 		for j := 0; j < TestTimes; j++ {
-			tester.RunTest(4, 512, int(math.Pow(2, float64(i))))
+			tester.RunTest(128, 256, int(math.Pow(2, float64(i))))
 		}
 		tester.WriteSymbol("-------------- dim " + strconv.FormatInt(int64(math.Pow(2, float64(i))), 10) + " --------------")
 		tester.WriteLog(tester.InsertLogs)
