@@ -246,11 +246,16 @@ func TestTopicsNum() {
 		testConfig: conf,
 	}
 
+	insertLogs := make([]InsertLog, 0)
 	for i := 0; i < 10; i++{
-		tester.RunTest(int(math.Pow(2, float64(i))), 512, 512)
+		tester.InsertLogs = make([]InsertLog, 0)
+		for j := 0; j < TestTimes; j++ {
+			tester.RunTest(int(math.Pow(2, float64(i))), 512, 512)
+		}
+		insertLogs = append(insertLogs, GetAverageTestResult(tester.InsertLogs))
 	}
 
-	tester.WriteLog(tester.InsertLogs)
+	tester.WriteLog(insertLogs)
 }
 
 func TestProducersNum() {
@@ -266,11 +271,17 @@ func TestProducersNum() {
 		testConfig: conf,
 	}
 
+	insertLogs := make([]InsertLog, 0)
 	for i := 7; i < 14; i++{
-		tester.RunTest(4, int(math.Pow(2, float64(i))), 512)
+		tester.InsertLogs = make([]InsertLog, 0)
+		for j := 0; j < TestTimes; j++ {
+			tester.RunTest(4, int(math.Pow(2, float64(i))), 512)
+		}
+		insertLogs = append(insertLogs, GetAverageTestResult(tester.InsertLogs))
+
 	}
 
-	tester.WriteLog(tester.InsertLogs)
+	tester.WriteLog(insertLogs)
 }
 
 func TestDims() {
