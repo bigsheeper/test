@@ -143,7 +143,7 @@ func (t *Tester) WriteLog(insertLogs []InsertLog) {
 	}
 
 	// reset InsertLogs buffer
-	t.InsertLogs = make([]InsertLog, 0)
+	// t.InsertLogs = make([]InsertLog, 0)
 
 	err = f.Close()
 	if err != nil {
