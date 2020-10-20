@@ -74,6 +74,19 @@ Topic 数量： 2^0 ~ 2^9
 ```go
 const TestTimes = 10
 const TotalDataSizeInGB = 0.5
+
+for i := 5; i < 17; i++{
+                tester.InsertLogs = make([]InsertLog, 0)
+                for j := 0; j < TestTimes; j++ {
+                        tester.RunTest(128, 256, int(math.Pow(2, float64(i))))
+                }
+                tester.WriteSymbol("-------------- dim " + strconv.FormatInt(int64(math.Pow(2, float64(i))), 10) + " --------------")
+                tester.WriteLog(tester.InsertLogs)
+                insertLogs = append(insertLogs, GetAverageTestResult(tester.InsertLogs))
+        }
+
+        tester.WriteSymbol("*************** total result ***************")
+        tester.WriteLog(insertLogs)
 ```
 
 结果如下：

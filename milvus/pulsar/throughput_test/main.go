@@ -232,18 +232,34 @@ func (t *Tester) RunTest(topicNum int, producerNum int, dim int) {
 	t.Close()
 }
 
-func GetAverageTestResult(insertLogs []InsertLog) InsertLog {
+// return [Average, Max, Min] InsertLog
+func GetStatisticTestResult(insertLogs []InsertLog) (InsertLog, InsertLog, InsertLog) {
 	var totalDuration int64 = 0
 	var totalSpeedInCounter float64 = 0
 	var totalSpeedInBytes float64 = 0
+
+	var maxInsert = InsertLog{
+		SpeedInBytes: -1,
+	}
+	var minInsert = InsertLog{
+		SpeedInBytes: math.MaxFloat64,
+	}
 
 	for _, insertLog := range insertLogs {
 		totalDuration += insertLog.DurationInMilliseconds
 		totalSpeedInCounter += insertLog.SpeedInCounter
 		totalSpeedInBytes += insertLog.SpeedInBytes
+		// max
+		if insertLog.SpeedInBytes > maxInsert.SpeedInBytes {
+			maxInsert = insertLog
+		}
+		// min
+		if insertLog.SpeedInBytes < minInsert.SpeedInBytes {
+			minInsert = insertLog
+		}
 	}
 
-	return InsertLog{
+	avg := InsertLog{
 		TopicNum: insertLogs[0].TopicNum,
 		ProducerNum: insertLogs[0].ProducerNum,
 		VectorDim: insertLogs[0].VectorDim,
@@ -252,6 +268,8 @@ func GetAverageTestResult(insertLogs []InsertLog) InsertLog {
 		SpeedInCounter: totalSpeedInCounter / float64(len(insertLogs)),
 		SpeedInBytes: totalSpeedInBytes / float64(len(insertLogs)),
 	}
+
+	return avg, maxInsert, minInsert
 }
 
 func TestTopicsNum() {
@@ -273,7 +291,7 @@ func TestTopicsNum() {
 		for j := 0; j < TestTimes; j++ {
 			tester.RunTest(int(math.Pow(2, float64(i))), 512, 512)
 		}
-		insertLogs = append(insertLogs, GetAverageTestResult(tester.InsertLogs))
+		insertLogs = append(insertLogs, GetStatisticTestResult(tester.InsertLogs))
 	}
 
 	tester.WriteLog(insertLogs)
@@ -298,7 +316,7 @@ func TestProducersNum() {
 		for j := 0; j < TestTimes; j++ {
 			tester.RunTest(4, int(math.Pow(2, float64(i))), 512)
 		}
-		insertLogs = append(insertLogs, GetAverageTestResult(tester.InsertLogs))
+		insertLogs = append(insertLogs, GetStatisticTestResult(tester.InsertLogs))
 
 	}
 
@@ -318,19 +336,31 @@ func TestDims() {
 		testConfig: conf,
 	}
 
-	insertLogs := make([]InsertLog, 0)
-	for i := 5; i < 19; i++{
+	tester.WriteSymbol("-------------- begin test --------------")
+	avgInsertLogs := make([]InsertLog, 0)
+	maxInsertLogs := make([]InsertLog, 0)
+	minInsertLogs := make([]InsertLog, 0)
+	for i := 5; i < 20; i++{
 		tester.InsertLogs = make([]InsertLog, 0)
 		for j := 0; j < TestTimes; j++ {
 			tester.RunTest(128, 256, int(math.Pow(2, float64(i))))
 		}
 		tester.WriteSymbol("-------------- dim " + strconv.FormatInt(int64(math.Pow(2, float64(i))), 10) + " --------------")
 		tester.WriteLog(tester.InsertLogs)
-		insertLogs = append(insertLogs, GetAverageTestResult(tester.InsertLogs))
+		var avg, max, min = GetStatisticTestResult(tester.InsertLogs)
+		avgInsertLogs = append(avgInsertLogs, avg)
+		maxInsertLogs = append(maxInsertLogs, max)
+		minInsertLogs = append(minInsertLogs, min)
 	}
 
-	tester.WriteSymbol("*************** total result ***************")
-	tester.WriteLog(insertLogs)
+	tester.WriteSymbol("*************** total result average ***************")
+	tester.WriteLog(avgInsertLogs)
+
+	tester.WriteSymbol("*************** total result max ***************")
+	tester.WriteLog(maxInsertLogs)
+
+	tester.WriteSymbol("*************** total result min ***************")
+	tester.WriteLog(minInsertLogs)
 }
 
 func main() {
