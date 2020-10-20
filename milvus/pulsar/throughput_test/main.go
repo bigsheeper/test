@@ -285,16 +285,29 @@ func TestTopicsNum() {
 		testConfig: conf,
 	}
 
-	insertLogs := make([]InsertLog, 0)
+	tester.WriteSymbol("-------------- begin test --------------")
+	avgInsertLogs := make([]InsertLog, 0)
+	maxInsertLogs := make([]InsertLog, 0)
+	minInsertLogs := make([]InsertLog, 0)
 	for i := 0; i < 10; i++{
 		tester.InsertLogs = make([]InsertLog, 0)
 		for j := 0; j < TestTimes; j++ {
 			tester.RunTest(int(math.Pow(2, float64(i))), 512, 512)
 		}
-		insertLogs = append(insertLogs, GetStatisticTestResult(tester.InsertLogs))
+		var avg, max, min = GetStatisticTestResult(tester.InsertLogs)
+		avgInsertLogs = append(avgInsertLogs, avg)
+		maxInsertLogs = append(maxInsertLogs, max)
+		minInsertLogs = append(minInsertLogs, min)
 	}
 
-	tester.WriteLog(insertLogs)
+	tester.WriteSymbol("*************** total result average ***************")
+	tester.WriteLog(avgInsertLogs)
+
+	tester.WriteSymbol("*************** total result max ***************")
+	tester.WriteLog(maxInsertLogs)
+
+	tester.WriteSymbol("*************** total result min ***************")
+	tester.WriteLog(minInsertLogs)
 }
 
 func TestProducersNum() {
@@ -310,17 +323,29 @@ func TestProducersNum() {
 		testConfig: conf,
 	}
 
-	insertLogs := make([]InsertLog, 0)
+	tester.WriteSymbol("-------------- begin test --------------")
+	avgInsertLogs := make([]InsertLog, 0)
+	maxInsertLogs := make([]InsertLog, 0)
+	minInsertLogs := make([]InsertLog, 0)
 	for i := 7; i < 14; i++{
 		tester.InsertLogs = make([]InsertLog, 0)
 		for j := 0; j < TestTimes; j++ {
 			tester.RunTest(4, int(math.Pow(2, float64(i))), 512)
 		}
-		insertLogs = append(insertLogs, GetStatisticTestResult(tester.InsertLogs))
-
+		var avg, max, min = GetStatisticTestResult(tester.InsertLogs)
+		avgInsertLogs = append(avgInsertLogs, avg)
+		maxInsertLogs = append(maxInsertLogs, max)
+		minInsertLogs = append(minInsertLogs, min)
 	}
 
-	tester.WriteLog(insertLogs)
+	tester.WriteSymbol("*************** total result average ***************")
+	tester.WriteLog(avgInsertLogs)
+
+	tester.WriteSymbol("*************** total result max ***************")
+	tester.WriteLog(maxInsertLogs)
+
+	tester.WriteSymbol("*************** total result min ***************")
+	tester.WriteLog(minInsertLogs)
 }
 
 func TestDims() {
